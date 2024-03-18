@@ -42,7 +42,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
-    public function rooms() {
-        return $this->morphMany(RoomChat::class,'roomable');
+    public function myrooms(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(RoomChat::class,'owner_id','id');
+    }
+
+    public function rooms(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(RoomChat::class,'room_user','user_id','room_id');
     }
 }

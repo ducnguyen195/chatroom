@@ -32,8 +32,8 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div class="absolute  font-bold text-xs top-0 right-0  mr-2 mt-1 flex justify-end items-center gap-4">
-
+                                <div class=" font-bold text-xs top-0 right-0  mr-2 mt-1 flex justify-end items-center gap-4">
+                                    <button onclick="sendJoinRoom('{{$item->id}}')"> <i class="fa-solid fa-right-to-bracket"></i></button>
                                 </div>
                             </a>
                         @endforeach
@@ -71,17 +71,16 @@
                                     </p>
                                 </div>
                              </div>
-                            <div class="absolute  font-bold text-xs top-0 right-0  mr-2 mt-1 flex justify-end items-center gap-4">
-
-                            </div>
+                           <div class=" font-bold text-xs top-0 right-0  mr-2 mt-1 flex justify-end items-center gap-4">
+                                    <button onclick="sendJoinRoom(${rooms[i].id})"> <i class="fa-solid fa-right-to-bracket"></i></button>
+                                </div>
                          </a> `
                 }
                 if(rooms.length === 0){
                     html = `<p class="font-bold text-red-500 flex justify-center">
-                    Room not found
-                    </p>"`
+                    Room not found !
+                    </p>`
                 }
-
                 $('#search_room_detail').html(html);
             },
             error: function (error){
@@ -90,4 +89,44 @@
             })
         });
     });
+    function sendJoinRoom(room_id) {
+        console.log('aaaaa',room_id);
+        $.ajax({
+            url:"{{route('room.join')}}",
+            type:'POST',
+            data:{
+                _token: '{{csrf_token()}}',
+                room_id: room_id
+            },
+            success:function (response){
+                turnOnNotification(response.message,'success');
+                const room = response.room;
+                if(!room) return
+                const html = `
+                    <a href="#" class=" hover:bg-amber-300 w-full bg-[#262948] py-2 px-4 my-3 rounded-lg grid grid-cols-3 text-blue-500  gap-2  relative">
+                        <div class="col-span-1 ">
+                            <div class="flex justify-start items-center gap-4">
+                                <div class="w-9 h-9 rounded-full">
+                                    @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                                </div>
+                                <p class="font-bold  ">
+                                    ${room.name}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="col-span-2 flex items-center ">
+                            <p > ${room.description}</p>
+                        </div>
+                     </a>`
+                const joinedRoomList = document.getElementById('join_rooms_list')
+                if (joinedRoomList) joinedRoomList.innerHTML +=html;
+                // Remove this room out of search result list
+                const searchRoomResultElement = document.getElementById("search_room_detail-"+room.id);
+                if (searchRoomResultElement) searchRoomResultElement.remove();
+            },
+            error: function(error) {
+                turnOnNotification(error.message, "error");
+            },
+        });
+    }
 </script>

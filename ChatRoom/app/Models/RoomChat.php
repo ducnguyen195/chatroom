@@ -18,13 +18,13 @@ class RoomChat extends Model
         'owner_id',
     ];
     protected $with = 'owner';
-    public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function owner(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
-        return $this->belongsTo(User::class,'owner_id','id');
+        return $this->hasOne(User::class,'id','owner_id');
     }
 
-    public function users(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
-        return $this->morphMany(User::class,'roomable');
+        return $this->belongsToMany(User::class,'room_user','room_id','user_id');
     }
 }
