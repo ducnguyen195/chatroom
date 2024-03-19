@@ -16,11 +16,12 @@ class RoomChat extends Model
       'name',
         'icon',
         'owner_id',
+        'description',
     ];
     protected $with = 'owner';
-    public function owner(): \Illuminate\Database\Eloquent\Relations\HasOne
+    public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
-        return $this->hasOne(User::class,'id','owner_id');
+        return $this->belongsTo(User::class,'owner_id','id');
     }
 
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany

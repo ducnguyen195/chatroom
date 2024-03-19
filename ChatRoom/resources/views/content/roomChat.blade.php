@@ -139,13 +139,13 @@
                 </div>
             </div>
             <div  class=" col-span-1 w-full h-full bg-lime-200 text-white pl-6 pr-10">
-               <div id="room_name" class="hidden w-full">
+               <div id="member" class="hidden w-full">
                    <div class=" flex h-1/6  bg-lime-300 pt-6 pb-12 pl-12 gap-4">
                        <div class=" w-32 h-16 rounded-full">
                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
                        </div>
                        <div class=" relative w-full">
-                           <p class="font-bold text-xl  text-blue-500  ">
+                           <p id="room_name" class="font-bold text-xl  text-blue-500 ">
 
                            </p>
                            <p class=" absolute bottom-0 left-0  top-8 font-bold text-xs text-gray-400">
@@ -235,15 +235,14 @@
                                      ${response.name}
                                </p>
                             </div>
-                       <div class="col-span-2 flex items-center ">
-                            <p > ${response.description}</p>
-                       </div>
-                     <div class="absolute  font-bold text-xs top-0 right-0  mr-2 mt-1 flex justify-end items-center gap-4">
-                        <p class="text-gray-400"> 2 min ago</p>
-                        <button class="w-5 h-5 text-sm bg-red-500 rounded-full text-white">1</button>
-                     </div>
-
-                  </a>`;
+                           <div class="col-span-2 flex items-center ">
+                                <p > ${response.description}</p>
+                           </div>
+                         <div class="absolute  font-bold text-xs top-0 right-0  mr-2 mt-1 flex justify-end items-center gap-4">
+                            <p class="text-gray-400"> 2 min ago</p>
+                            <button class="w-5 h-5 text-sm bg-red-500 rounded-full text-white">1</button>
+                         </div>
+                        </a>`;
                     $('#rooms_list,#all_rooms_list').prepend(html);
                 },
                 error: function (err){
@@ -263,21 +262,24 @@
                roomId:roomId
            },
            success:function (response){
-                var room_name = response.room_name;
-               let mem = response.member;
+               const roomName = response.roomName;
+               console.log(roomName.name)
+               let room_name = document.getElementById('room_name');
+               room_name.innerText = roomName.name;
+               let member = response.member;
                const openMember = document.getElementById('member');
                openMember.classList.remove('hidden');
                let html = '';
-               console.log(mem);
-               for (i = 0; i < mem.length; i++) {
+               console.log(member);
+               for (i = 0; i < member.length; i++) {
                    html += `<div class="w-full  bg-[#262948] mt-3  rounded-lg">
-                        <div class="flex  px-3 py-1.5">
-                            <p class="text-gray-300 w-8 h-8  ">
-                                @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
-                            </p>
-                            <p class="text-gray-300 text-xs flex items-center pl-2"> ${mem[i].name} </p>
-                        </div>
-                   </div>`
+                                <div class="flex  px-3 py-1.5">
+                                    <p class="text-gray-300 w-8 h-8  ">
+                                        @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                                    </p>
+                                    <p class="text-gray-300 text-xs flex items-center pl-2"> ${member[i].name} </p>
+                                </div>
+                            </div>`
                }
                $('#list_member').html(html);
            },

@@ -82,13 +82,15 @@ class RoomChatController extends Controller
 
     public function open(Request $request): \Illuminate\Http\JsonResponse
     {
+        $user = Auth::user();
         $input = $request->all();
         $room = RoomChat::find($input['roomId']);
         $member = $room->users->all();
         $owner = $room->owner;
-
-
-        return response()->json(['member'=>$member , 'room_name'=> $owner]);
+//        echo '<pre>';
+//        print_r($owner);
+//        echo '</pre>';
+        return response()->json(['member'=>$member , 'roomName'=> $room],200);
     }
 
 }
