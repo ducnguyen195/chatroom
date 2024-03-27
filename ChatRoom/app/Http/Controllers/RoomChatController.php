@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 use App\Models\Room_User;
 use App\Models\RoomChat;
 use App\Models\User;
+use App\Models\Message;
 use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -43,7 +44,7 @@ class RoomChatController extends Controller
         $new_room ['name'] = $input ['room_name'];
         $new_room ['description'] = $input ['description'];
         $new_room ['icon'] = $input ['image'];
-        $new_room ['owner_id'] = auth()->user()->id;
+        $new_room ['owner_id'] = Auth()->user()->id;
         $new_room->save();
         return response()->json($new_room,200) ;
 
@@ -51,6 +52,7 @@ class RoomChatController extends Controller
     public function search(Request $request): \Illuminate\Http\JsonResponse
     {
         $user = Auth::user();
+
         $search_room = $request->input('search_room');
         $user ? $owner_room_id = $user->myrooms->pluck('id') : $owner_room_id = [];
         $join_room_id = $user->rooms->pluck('id');
@@ -82,15 +84,13 @@ class RoomChatController extends Controller
 
     public function open(Request $request): \Illuminate\Http\JsonResponse
     {
-        $user = Auth::user();
         $input = $request->all();
         $room = RoomChat::find($input['roomId']);
-        $member = $room->users->all();
+
+        $member = $room->users;
         $owner = $room->owner;
-//        echo '<pre>';
-//        print_r($owner);
-//        echo '</pre>';
-        return response()->json(['member'=>$member , 'roomName'=> $room],200);
+        $member = $member->merge([$owner]);
+        return response()->json(['member'=>$member, 'roomName'=> $room],200);
     }
 
 }

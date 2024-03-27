@@ -17,7 +17,7 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 </head>
 <body>
-<div class="app h-screen lg:w-full grid  grid-cols-6 text-base  md:w-10 sm:w-10">
+<div class="app h-screen lg:w-full grid  grid-cols-6 text-base  md:w-10 sm:w-10" >
     {{--  Sidebar--}}
     <div class="col-span-1 w-full h-full bg-[#262948] relative">
         <div class="w-full py-8 px-4">
@@ -115,7 +115,7 @@
                 <div class="w-full pl-4 font-bold mt-9 " id="join_rooms_list">
                     <p> Join Room</p>
                     @foreach($join_rooms_list as $item)
-                        <a href="#" onclick="openRoomChat('{{$item->id}}')" class=" hover:bg-amber-300 w-full bg-[#262948] py-2 px-4 my-3 rounded-lg grid grid-cols-3 text-blue-500  gap-2  relative">
+                        <a href="#" onclick="openRoomChat('{{$item->id}}')"  class=" hover:bg-amber-300 w-full bg-[#262948] py-2 px-4 my-3 rounded-lg grid grid-cols-3 text-blue-500  gap-2  relative">
                             <div class="col-span-1 flex ">
                                 <div class="flex justify-start items-center gap-4">
                                     <div class="w-9 h-9 rounded-full">
@@ -146,7 +146,7 @@
                        </div>
                        <div class=" relative w-full">
                            <p id="room_name" class="font-bold text-xl  text-blue-500 ">
-
+                            {{--   Room Name--}}
                            </p>
                            <p class=" absolute bottom-0 left-0  top-8 font-bold text-xs text-gray-400">
                                <i class="fa-solid fa-users"></i>
@@ -154,7 +154,9 @@
                            </p>
                        </div>
                        <div class="grid gap-3 pr-4">
-                           <button class="text-blue-600 hover:text-emerald-400 text-xl" title="Join Room"> <i class="fa-brands fa-facebook-messenger"></i> </button>
+                           <button  class="text-blue-600 hover:text-emerald-400 text-xl" title="Join Room" >
+                               <a id="room_id" href="{{route('room.message')}}">  <i class="fa-brands fa-facebook-messenger"></i> </a>
+                           </button>
                            <button class="text-red-400" title="Out Room"> <i class="fa-solid fa-right-from-bracket"></i> </button>
                        </div>
                    </div>
@@ -164,8 +166,8 @@
                            <i class="fa-solid fa-magnifying-glass self-center text-gray-500 text-xl"></i>
                        </button>
                    </div>
-                   <div id="list_member" class=" p-10 relative mt-3  w-auto  h-96  bg-gray-100 rounded-lg overscroll-none overflow-y-auto">
-
+                   <div id="list_member" class=" px-10 py-2 relative mt-3  w-auto  h-96  bg-gray-100 rounded-lg overscroll-none overflow-y-auto">
+                                {{--List Member--}}
                    </div>
                </div>
             </div>
@@ -177,7 +179,7 @@
 @include('components.modalSearch')
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" ></script>
 <script>
-    // Modal : Open and Close
+    //TODO  Modal : Open and Close
     function openModal(modal_id){
         let openFormModal = document.getElementById(modal_id);
         openFormModal.classList.remove('hidden');
@@ -188,7 +190,7 @@
         closeFormModal.classList.remove('visible');
         closeFormModal.classList.add('hidden');
     }
-
+    // TODO: Message notification
     function turnOnNotification (message ,type) {
         const notification = document.getElementById('notification-'+type);
         const notificationMessenger = document.getElementById('notification-' + type + '-message');
@@ -262,9 +264,11 @@
                roomId:roomId
            },
            success:function (response){
-               const roomName = response.roomName;
+               let roomName = response.roomName;
                console.log(roomName.name)
                let room_name = document.getElementById('room_name');
+               {{--let roomId = document.getElementById('room_id')--}}
+               {{--roomId.href = '{{route('room.message', $roomName->id)}}' ;--}}
                room_name.innerText = roomName.name;
                let member = response.member;
                const openMember = document.getElementById('member');

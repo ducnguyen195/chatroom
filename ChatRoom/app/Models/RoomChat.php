@@ -18,7 +18,7 @@ class RoomChat extends Model
         'owner_id',
         'description',
     ];
-    protected $with = 'owner';
+
     public function owner(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class,'owner_id','id');
@@ -27,5 +27,17 @@ class RoomChat extends Model
     public function users(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(User::class,'room_user','room_id','user_id');
+    }
+
+    public function messages(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Message::class,'chatroom_id','id');
+    }
+    public function allUsers(){
+        $users = $this->users();
+        if ($users){
+            return $users->merge([$this->owner()]);
+        }
+        return [$this->owner()];
     }
 }
