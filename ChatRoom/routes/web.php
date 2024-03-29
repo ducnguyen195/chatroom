@@ -26,8 +26,8 @@ Route::group(['prefix'=>'chat-room'],function (){
     Route::post('/join',[RoomChatController::class,'join'])->name('room.join');
     Route::post('/open',[RoomChatController::class,'open'])->name('room.open');
     Route::get('/message',[MessageController::class,'message'])->name('room.message');
-    Route::post('/detail',[MessageController::class,'detail'])->name('room.detail');
-    Route::post('content',[MessageController::class,'content'])->name('message.content');
+    Route::get('/detail',[MessageController::class,'detail'])->name('room.detail');
+    Route::post('/send',[MessageController::class,'send'])->name('message.send');
 });
 
 Auth::routes();

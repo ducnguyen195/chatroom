@@ -1,9 +1,9 @@
 <div class="div_edit">
-    <button id="btn_selector"  onclick="openModal('edit_message')" class= "text-xl">
+    <button id="btn_selector" onclick="openModal('edit_message_{{$item->id}}')" class= "text-xl">
         <i class="fa-solid fa-ellipsis-vertical"></i>
     </button>
     <div class="">
-        <div id="edit_message" class=" hidden w-22 h-22 bg-gray-100 p-2 rounded-lg shadow">
+        <div id="edit_message_{{$item->id}}" class=" hidden w-22 h-22 bg-gray-100 p-2 rounded-lg shadow">
             <ul class="font-bold text-xs">
                 <li>
                     <button class="p-2 rounded-lg hover:bg-gray-200" >

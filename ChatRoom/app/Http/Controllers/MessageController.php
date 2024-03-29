@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth');
+    }
     public function message(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
     {
         $user = Auth::user();
@@ -36,5 +39,19 @@ class MessageController extends Controller
         $room = RoomChat::find($input['roomId']);
         $message = $room->messages;
         return response()->json(['message'=> $message ,'room' => $room, 'user' => $user],200);
+    }
+
+    public function send(Request $request): \Illuminate\Http\JsonResponse
+    {
+        $input = $request->all();
+        $message = Message::create([
+            'chatroom_id'=>$input['roomId'],
+            'parent_id'=> Auth::user()->id,
+            'user_id'=> Auth::user()->id,
+            'content'=>$input['content'],
+            'type'=> $input['type'],
+
+        ]);
+        return response()->json(['message'=>$message]);
     }
 }

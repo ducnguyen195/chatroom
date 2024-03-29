@@ -68,7 +68,7 @@
                     <input class="w-full focus:ring-0 border-0  rounded-lg p-1.5 pr-9" type="text">
                     <button class="absolute top-0 right-2 p-1 pr-3 text-xl " type="button"> <i class="fa-solid fa-magnifying-glass"></i> </button>
                 </div>
-                <div class="w-full o" >
+                <div class="w-full " >
                     <div class="w-full pl-4 font-bold mt-9 pr-2 overflow-y-auto" >
                         @foreach($rooms as $item)
                         <a href="#" onclick="joinRoomChat({{$item->id}})"  class="hover:bg-[#4289f3] w-full bg-[#262948] py-2 px-4 my-3 rounded-lg grid
@@ -109,62 +109,83 @@
                <div class=" flex ml-3 relative w-full">
                    <div>
                        <p id="room_name" class="font-semibold text-xl  text-blue-600 ">
-                           Hello
+
                        </p>
                        <p class=" absolute bottom-0 left-0  top-7 font-bold text-xs text-gray-400">
                            <i class="fa-solid fa-users"></i>
                            <span> 20</span>
                        </p>
                    </div>
-                   <p class="font-bold ml-4 text-gray-600"> aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa </p>
+                   <p id="room_description" class="font-bold ml-4 text-gray-600">  </p>
                </div>
            </div>
        </div>
 {{--        Content Message--}}
         <div class="w-full h-full grid grid-rows-4 px-4 mt-3 ">
-            <div class="row-span-3 w-full overflow-y-auto end-0 flex-end  ">
-                <div class="edit_hover flex self-center gap-4 ">
-                    <div class="flex gap-2 ">
-                        <div class="w-9 h-9 rounded-full">
-                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
-                        </div>
-                        <p class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
-                            Chào các bạnnnnnnnnnnnn
-                        </p>
-                    </div>
-                    @include('components.modalEditMessage')
-                </div>
-                <div class=" edit_hover flex self-center gap-4 flex-row-reverse  ">
-                    <div class=" items-end  ">
-                        <p class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
-                            Chào các bạn
-                        </p>
-                    </div>
-                    @include('components.modalEditMessage')
-                </div>
+            <div id="message_text" class=" message_image row-span-3 w-full overflow-y-auto end-0 flex-end  ">
+{{--                <div class="edit_hover w-full flex self-center gap-4 ">--}}
+{{--                    <div class="flex gap-2 mt-2 ">--}}
+{{--                        <div class="w-9 h-9 rounded-full">--}}
+{{--                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])--}}
+{{--                        </div>--}}
+{{--                        <p id="message_text" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
+{{--                            aaaaaaaaaaaaaaaaa--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @include('components.modalEditMessage')--}}
+{{--                </div>--}}
+{{--                <div class="edit_hover mt-2 w-full flex self-center gap-4 ">--}}
+{{--                    <div class="flex gap-2 ">--}}
+{{--                        <div class="w-9 h-9 rounded-full">--}}
+{{--                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])--}}
+{{--                        </div>--}}
+{{--                        <p id="message_text" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
+{{--                            <img src="" width="100" height="100" alt="">--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @include('components.modalEditMessage')--}}
+{{--                </div>--}}
+{{--                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">--}}
+{{--                    <div class=" items-end  ">--}}
+{{--                        <p id="message_text" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
+{{--                            aaaaaaaa--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @include('components.modalEditMessage')--}}
+{{--                </div>--}}
+{{--                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">--}}
+{{--                    <div class=" items-end  ">--}}
+{{--                        <p id="message_image" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
+{{--                            <img src="" width="100" height="100">--}}
+{{--                        </p>--}}
+{{--                    </div>--}}
+{{--                    @include('components.modalEditMessage')--}}
+{{--                </div>--}}
             </div>
-            <div class="  row-span-1 w-full fixed bottom-0 box-border pl-12 p-3 bg-amber-50  ">
-                <form action="#" class="flex w-full" id="messageSubmit">
-                    @csrf
+            <div id="formMessage" class="  row-span-1 w-[64%] fixed bottom-0 box-border pl-12 p-3 bg-amber-50 flex flex-end  ">
+                <div  class="flex w-full  " id="messageSubmit">
                     <div >
                         <label for="input_image"></label>
-                        <input id="input_image" name="image" type="file">
+                        <a class="text-2xl flex self-center hover:cursor-pointer" onclick="document.getElementById('input_image').click()"> <i class="fa-solid fa-image"></i> </a>
+                        <input id="input_image" onchange="readUrl(this)" class="hidden" accept="image/*" name="content" type="file">
                     </div>
-                    <div class="w-full ">
-                        <label for="input_message"></label>
-                        <input placeholder="Aa" class=" w-2/4 rounded-full border-1 focus:ring-0" id="input_message" name="text" type="text">
+                    <div class="w-full ml-8 ">
+                        <label for="input_message " ></label>
+                        <input placeholder="Aa" class=" w-5/6 rounded-full border-1 focus:ring-0"
+                               id="input_text" name="content" type="text">
+                        <img id="imageUrl" src="" width="50" height="50" alt="">
                     </div>
-                    <button type="submit" class="text-black" >  </button>
-                </form>
 
+                    <button type="submit" class="text-black" onclick="sendMessage()"  > Send </button>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script>
-    function openModal(modal){
-        var openModal = document.getElementById(modal);
+    function openModal(modal_id){
+        var openModal = document.getElementById(modal_id);
         let btnSelec = document.getElementById('btn_selector')
         openModal.classList.remove('hidden');
         openModal.classList.add('visible');
@@ -172,38 +193,133 @@
         btnSelec.classList.add('hidden');
     }
 
+    function readUrl(input){
+        if(input.file && input.file[0]){
+            const newImage = new fileImage()
+            newImage.onload =function (e){
+                $('#imageUrl').attr('src',e.target.result)
+            };
+            newImage.readAsDataURL(input.file[0]);
+        }
+    }
+
     function joinRoomChat(roomId){
         console.log(roomId)
         $.ajax({
             url:'{{route('room.detail')}}',
-            type:'POST',
+            type:'GET',
             data:{
                 _token: '{{csrf_token()}}',
                 roomId: roomId
             },
             success:function (response){
-                let user = response.user;
-                let messages = response.message;
+                const user = response.user;
+                console.log(user);
+                const room = response.room;
+                console.log(room);
+                const messages = response.message;
                 console.log(messages)
+                let messText = '';
+                let formMess  =`
+                    <div class="flex w-full  " id="messageSubmit">
+                        <div id="formMessage" >
+                            <label for="input_image"></label>
+                            <a class="text-2xl flex self-center hover:cursor-pointer" onclick="document.getElementById('input_image').click()"> <i class="fa-solid fa-image"></i> </a>
+                            <input id="input_image" onchange="readUrl(this)" class="hidden" accept="image/*" name="content" type="file">
+                        </div>
+                        <div id="tag_name" class="w-full ml-8 ">
+                            <label for="input_message " ></label>
+                            <input  placeholder="Aa" class=" w-5/6 rounded-full border-1 focus:ring-0"
+                                   id="input_text" name="content" type="text">
+                        </div>
+                        <button type="submit" class="text-black" onclick="sendMessage(${room.id})"  > Send </button>
+                    </div>
+                    `
                 for(i = 0 ; i < messages.length; i++){
-                    if(user === messages[i].user_id){
-                        
-                    }
+                    if(user === messages[i].parent_id){
+                        if(messages[i].type === 'text'){
+                             messText +=`
+                                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">
+                                    <div class=" items-end  ">
+                                        <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                                            ${messages[i].content}
+                                        </p>
+                                    </div>
+                                    @include('components.modalEditMessage')
+                                </div>`
+                        }else{
+                             messText += `
+                                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse   ">
+                                    <div class=" items-end  ">
+                                        <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                                            <?php ?>
+                                            <img src="http://chat.th${messages[i].content}" width="100" height="100">
+                                        </p>
+                                    </div>
+                                    @include('components.modalEditMessage')
+                                </div>`
+                        }
+                    }else
+                        if(messages[i].type === 'text'){
+                        messText += `
+                            <div class="edit_hover mt-2 flex self-center gap-4 ">
+                                <div class="flex gap-2 ">
+                                    <div class="w-9 h-9 rounded-full">
+                                        @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                                    </div>
+                                    <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                                         ${messages[i].content}
+                                    </p>
+                                </div>
+                                @include('components.modalEditMessage')
+                            </div>`
+                        }else {
+                            messText +=`
+                                <div class="edit_hover mt-2 flex self-center gap-4 ">
+                                    <div class="flex gap-2 ">
+                                        <div class="w-9 h-9 rounded-full">
+                                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                                        </div>
+                                        <p class="text-sm font-semibold bg-gray-200 rounded-lg">
+                                            <img src="http://chat.th${messages[i].content}" width="150" height="150" alt="">
+                                         </p>
+                                    </div>
+                                        @include('components.modalEditMessage')
+                                </div>`
+                        }
                 }
+                $('#room_name').text(room.name);
+                $('#room_description').text(room.description);
+               $('#message_text').html(messText);
+               $('#formMessage').html(formMess);
             }
         })
-
     }
 
-    $(document).ready(function (){
-        $('#messageSubmit').on(function (){
-            $.ajax({
-                url: '{{route("message.content")}}',
-                type:'POST',
-                data:$(this).serialize(),
-            });
-        })
-    })
+    function sendMessage(roomId){
+        console.log(roomId);
+        let content = $('#input_text').val();
+        let image =$('#input_image').val();
+        $.ajax({
+            url:'{{route('message.send')}}',
+            type:'POST',
+            data:{
+                _token:'{{csrf_token()}}',
+                roomId:roomId,
+                content:content,
+                image:image,
+                type:'text',
+                },
+            success:function (){
+
+            }
+        });
+    };
+
+   $('#tag_name').on('input',function (){
+       let inputText = $('#input_text').val();
+       console.log(inputText);
+   });
 
 </script>
 </body>
