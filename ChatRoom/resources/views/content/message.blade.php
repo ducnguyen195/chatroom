@@ -7,6 +7,7 @@
     <title>COMBAT </title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css"  rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     @vite('resources/css/app.css')
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -100,8 +101,8 @@
             </div>
         </div>
     </div>
-    <div class="col-span-2 bg-lime-100 w-full h-full overflow-y-auto">
-       <div class="w-full sticky top-0 z-30 ">
+    <div id="room_message_body" class="hidden  col-span-2 bg-lime-100 w-full h-full overflow-y-auto">
+       <div class=" w-full sticky top-0 z-30 ">
            <div class="   flex border-b-2 w-full p-3 bg-lime-300 ">
                <div class=" w-12 h-11 rounded-full">
                    @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
@@ -123,44 +124,7 @@
 {{--        Content Message--}}
         <div class="w-full h-full grid grid-rows-4 px-4 mt-3 ">
             <div id="message_text" class=" message_image row-span-3 w-full overflow-y-auto end-0 flex-end  ">
-{{--                <div class="edit_hover w-full flex self-center gap-4 ">--}}
-{{--                    <div class="flex gap-2 mt-2 ">--}}
-{{--                        <div class="w-9 h-9 rounded-full">--}}
-{{--                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])--}}
-{{--                        </div>--}}
-{{--                        <p id="message_text" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
-{{--                            aaaaaaaaaaaaaaaaa--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                    @include('components.modalEditMessage')--}}
-{{--                </div>--}}
-{{--                <div class="edit_hover mt-2 w-full flex self-center gap-4 ">--}}
-{{--                    <div class="flex gap-2 ">--}}
-{{--                        <div class="w-9 h-9 rounded-full">--}}
-{{--                            @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])--}}
-{{--                        </div>--}}
-{{--                        <p id="message_text" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
-{{--                            <img src="" width="100" height="100" alt="">--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                    @include('components.modalEditMessage')--}}
-{{--                </div>--}}
-{{--                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">--}}
-{{--                    <div class=" items-end  ">--}}
-{{--                        <p id="message_text" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
-{{--                            aaaaaaaa--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                    @include('components.modalEditMessage')--}}
-{{--                </div>--}}
-{{--                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">--}}
-{{--                    <div class=" items-end  ">--}}
-{{--                        <p id="message_image" class="text-sm font-semibold bg-gray-200 rounded-lg p-2">--}}
-{{--                            <img src="" width="100" height="100">--}}
-{{--                        </p>--}}
-{{--                    </div>--}}
-{{--                    @include('components.modalEditMessage')--}}
-{{--                </div>--}}
+                {{-- Message Content--}}
             </div>
             <div id="formMessage" class="  row-span-1 w-[64%] fixed bottom-0 box-border pl-12 p-3 bg-amber-50 flex flex-end  ">
                 <div  class="flex w-full  " id="messageSubmit">
@@ -171,9 +135,8 @@
                     </div>
                     <div class="w-full ml-8 ">
                         <label for="input_message " ></label>
-                        <input placeholder="Aa" class=" w-5/6 rounded-full border-1 focus:ring-0"
-                               id="input_text" name="content" type="text">
-                        <img id="imageUrl" src="" width="50" height="50" alt="">
+                        <input placeholder="A111" class=" w-5/6 rounded-full border-1 focus:ring-0"
+                               id="input_text" name="content" type="text" >
                     </div>
 
                     <button type="submit" class="text-black" onclick="sendMessage()"  > Send </button>
@@ -213,6 +176,9 @@
                 roomId: roomId
             },
             success:function (response){
+                let openRoom = document.getElementById('room_message_body');
+                openRoom.classList.remove('hidden');
+                openRoom.classList.add('visible');
                 const user = response.user;
                 console.log(user);
                 const room = response.room;
@@ -225,12 +191,12 @@
                         <div id="formMessage" >
                             <label for="input_image"></label>
                             <a class="text-2xl flex self-center hover:cursor-pointer" onclick="document.getElementById('input_image').click()"> <i class="fa-solid fa-image"></i> </a>
-                            <input id="input_image" onchange="readUrl(this)" class="hidden" accept="image/*" name="content" type="file">
+                            <input id="input_image"  class="hidden" accept="image/*" name="image" type="file">
                         </div>
-                        <div id="tag_name" class="w-full ml-8 ">
+                        <div class="w-full ml-8 ">
                             <label for="input_message " ></label>
-                            <input  placeholder="Aa" class=" w-5/6 rounded-full border-1 focus:ring-0"
-                                   id="input_text" name="content" type="text">
+                            <input  placeholder="Aassss" class=" w-5/6 rounded-full border-1 focus:ring-0"
+                                   id="input_text" name="content" type="text" >
                         </div>
                         <button type="submit" class="text-black" onclick="sendMessage(${room.id})"  > Send </button>
                     </div>
@@ -273,7 +239,7 @@
                                 </div>
                                 @include('components.modalEditMessage')
                             </div>`
-                        }else {
+                        } else {
                             messText +=`
                                 <div class="edit_hover mt-2 flex self-center gap-4 ">
                                     <div class="flex gap-2 ">
@@ -285,9 +251,9 @@
                                          </p>
                                     </div>
                                         @include('components.modalEditMessage')
-                                </div>`
-                        }
-                }
+                               </div>`
+                          }
+                    }
                 $('#room_name').text(room.name);
                 $('#room_description').text(room.description);
                $('#message_text').html(messText);
@@ -299,7 +265,73 @@
     function sendMessage(roomId){
         console.log(roomId);
         let content = $('#input_text').val();
-        let image =$('#input_image').val();
+
+        Pusher.logToConsole = true;
+        var pusher = new Pusher('817d365934170d0dc95f', {
+            cluster: 'ap1'
+        });
+        var channel = pusher.subscribe('my-channel_'+roomId);
+        channel.bind('my-event', function(data) {
+            const user = {{Auth::user()->id}};
+            let html ="";
+            if( user === data.message.userId){
+                console.log(data.message.userId);
+                console.log(user);
+                if(data.message.type === 'text'){
+                    html += `
+                    <div class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">
+                        <div class=" items-end  ">
+                            <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                                ${data.message.content}
+                            </p>
+                        </div>
+                        @include('components.modalEditMessage')
+                    </div>
+`
+                } else {
+                    html += `
+                     <div class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse   ">
+                        <div class=" items-end  ">
+                            <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                            <img src="http://chat.th${data.message.content}" width="100" height="100">
+                            </p>
+                        </div>
+                        @include('components.modalEditMessage')
+                    </div>
+`
+                }
+            } else {
+                if(data.message.type === 'text'){
+                    html += `
+                    <div class="edit_hover mt-2 flex self-center gap-4 ">
+                        <div class="flex gap-2 ">
+                            <div class="w-9 h-9 rounded-full">
+                                @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                    </div>
+                    <p class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                        ${data.message.content}
+                        </p>
+                        </div>
+                        @include('components.modalEditMessage')
+                    </div>`
+                } else {
+                    html +=`
+                    <div class="edit_hover mt-2 flex self-center gap-4 ">
+                        <div class="flex gap-2 ">
+                            <div class="w-9 h-9 rounded-full">
+                                @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                    </div>
+                    <p class="text-sm font-semibold bg-gray-200 rounded-lg">
+                    <img src="http://chat.th${data.message.content}" width="150" height="150" alt="">
+                             </p>
+                        </div>
+                            @include('components.modalEditMessage')
+                    </div>`
+                }
+            }
+            let newMessage = document.getElementById('message_text');
+            newMessage.innerHTML += html;
+        })
         $.ajax({
             url:'{{route('message.send')}}',
             type:'POST',
@@ -307,19 +339,19 @@
                 _token:'{{csrf_token()}}',
                 roomId:roomId,
                 content:content,
-                image:image,
                 type:'text',
+                userId:{{Auth::user()->id}}
                 },
-            success:function (){
-
-            }
+            success:function (response){
+                $('#input_text').val(null)
+            },
+            error: function (error) {
+                alert("Có lỗi xảy ra",error);
+            },
         });
     };
 
-   $('#tag_name').on('input',function (){
-       let inputText = $('#input_text').val();
-       console.log(inputText);
-   });
+
 
 </script>
 </body>

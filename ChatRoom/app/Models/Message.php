@@ -12,7 +12,8 @@ class Message extends Model
         'chatroom_id',
         'user_id',
         'content',
-        'parent_id'
+        'parent_id',
+        'type'
     ];
 
     public function room(): \Illuminate\Database\Eloquent\Relations\BelongsTo

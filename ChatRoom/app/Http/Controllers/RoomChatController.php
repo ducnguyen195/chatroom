@@ -86,7 +86,6 @@ class RoomChatController extends Controller
     {
         $input = $request->all();
         $room = RoomChat::find($input['roomId']);
-
         $member = $room->users;
         $owner = $room->owner;
         $member = $member->merge([$owner]);

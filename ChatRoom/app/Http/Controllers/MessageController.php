@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\MessageSent;
 use App\Models\Message;
 use App\Models\Room_User;
 use App\Models\RoomChat;
@@ -13,7 +14,7 @@ class MessageController extends Controller
     public function __construct(){
         $this->middleware('auth');
     }
-    public function message(): \Illuminate\Contracts\View\View|\Illuminate\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\Foundation\Application
+    public function message()
     {
         $user = Auth::user();
         if (!empty($user->myrooms)) {
@@ -44,14 +45,21 @@ class MessageController extends Controller
     public function send(Request $request): \Illuminate\Http\JsonResponse
     {
         $input = $request->all();
+        $room_id = $input['roomId'];
+        echo '<pre>';
+        print_r($room_id);
+        echo '</pre>';
         $message = Message::create([
             'chatroom_id'=>$input['roomId'],
-            'parent_id'=> Auth::user()->id,
-            'user_id'=> Auth::user()->id,
+            'parent_id'=> $input['userId'],
+            'user_id'=> $input['userId'],
             'content'=>$input['content'],
             'type'=> $input['type'],
-
         ]);
-        return response()->json(['message'=>$message]);
+        event(new MessageSent($input,$room_id));
+        return response()->json(['message'=>$message],200);
+
     }
+
+
 }
