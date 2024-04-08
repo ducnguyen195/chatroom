@@ -46,9 +46,6 @@ class MessageController extends Controller
     {
         $input = $request->all();
         $room_id = $input['roomId'];
-        echo '<pre>';
-        print_r($room_id);
-        echo '</pre>';
         $message = Message::create([
             'chatroom_id'=>$input['roomId'],
             'parent_id'=> $input['userId'],
@@ -60,6 +57,4 @@ class MessageController extends Controller
         return response()->json(['message'=>$message],200);
 
     }
-
-
 }

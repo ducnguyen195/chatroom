@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.2.1/flowbite.min.css"  rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     @vite('resources/css/app.css')
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -123,7 +124,7 @@
        </div>
 {{--        Content Message--}}
         <div class="w-full h-full grid grid-rows-4 px-4 mt-3 ">
-            <div id="message_text" class=" message_image row-span-3 w-full overflow-y-auto end-0 flex-end  ">
+            <div id="message_text" class="message_image row-span-3 w-full overflow-y-auto end-0 flex-end  ">
                 {{-- Message Content--}}
             </div>
             <div id="formMessage" class="  row-span-1 w-[64%] fixed bottom-0 box-border pl-12 p-3 bg-amber-50 flex flex-end  ">
@@ -139,7 +140,7 @@
                                id="input_text" name="content" type="text" >
                     </div>
 
-                    <button type="submit" class="text-black" onclick="sendMessage()"  > Send </button>
+                    <button type="submit" class="text-black"  onclick="sendMessage()"  > Send </button>
                 </div>
             </div>
         </div>
@@ -165,7 +166,7 @@
             newImage.readAsDataURL(input.file[0]);
         }
     }
-
+        // Join room chat
     function joinRoomChat(roomId){
         console.log(roomId)
         $.ajax({
@@ -196,8 +197,13 @@
                         <div class="w-full ml-8 ">
                             <label for="input_message " ></label>
                             <input  placeholder="Aassss" class=" w-5/6 rounded-full border-1 focus:ring-0"
-                                   id="input_text" name="content" type="text" >
+                                   id="input_text" oninput="tagNameFunction()" name="content" type="text" >
+                        <div class=" w-96  bg-black  ">
                         </div>
+                        </div>
+
+
+
                         <button type="submit" class="text-black" onclick="sendMessage(${room.id})"  > Send </button>
                     </div>
                     `
@@ -205,9 +211,9 @@
                     if(user === messages[i].parent_id){
                         if(messages[i].type === 'text'){
                              messText +=`
-                                <div  class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">
+                                <div  class=" edit_hover   w-full mt-2 flex self-center gap-4 flex-row-reverse  ">
                                     <div class=" items-end  ">
-                                        <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                                        <p  class="text-sm font-semibold  bg-blue-400 rounded-lg p-2">
                                             ${messages[i].content}
                                         </p>
                                     </div>
@@ -261,35 +267,34 @@
             }
         })
     }
-
+        // SEND MESSAGE
     function sendMessage(roomId){
         console.log(roomId);
         let content = $('#input_text').val();
-
         Pusher.logToConsole = true;
         var pusher = new Pusher('817d365934170d0dc95f', {
             cluster: 'ap1'
         });
-        var channel = pusher.subscribe('my-channel_'+roomId);
+        var channel = pusher.subscribe('my-channel_'+ roomId);
         channel.bind('my-event', function(data) {
-            const user = {{Auth::user()->id}};
-            let html ="";
-            if( user === data.message.userId){
-                console.log(data.message.userId);
-                console.log(user);
+            let html = '';
+            let user_id = {{Auth::user()->id}};
+            user_id = user_id.toString();
+            if( user_id === data.message.userId){
+                console.log("Data message: ", data.message.content)
                 if(data.message.type === 'text'){
-                    html += `
-                    <div class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse  ">
+                    html = `
+                    <div class=" edit_hover  w-full mt-2 flex self-center gap-4 flex-row-reverse  ">
                         <div class=" items-end  ">
-                            <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
+                            <p  class="text-sm font-semibold bg-blue-400 rounded-lg p-2">
                                 ${data.message.content}
                             </p>
                         </div>
                         @include('components.modalEditMessage')
                     </div>
-`
+                    `
                 } else {
-                    html += `
+                    html = `
                      <div class=" edit_hover w-full mt-2 flex self-center gap-4 flex-row-reverse   ">
                         <div class=" items-end  ">
                             <p  class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
@@ -302,30 +307,30 @@
                 }
             } else {
                 if(data.message.type === 'text'){
-                    html += `
-                    <div class="edit_hover mt-2 flex self-center gap-4 ">
-                        <div class="flex gap-2 ">
-                            <div class="w-9 h-9 rounded-full">
-                                @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                    html = `
+                        <div class="edit_hover mt-2 flex self-center gap-4 ">
+                            <div class="flex gap-2 ">
+                                <div class="w-9 h-9 rounded-full">
+                                    @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
                     </div>
-                    <p class="text-sm font-semibold bg-gray-200 rounded-lg p-2">
-                        ${data.message.content}
-                        </p>
-                        </div>
-                        @include('components.modalEditMessage')
+                    <p class="text-sm font-semibold bg-blue-400 rounded-lg p-2">
+                            ${data.message.content}
+                            </p>
+                            </div>
+                            @include('components.modalEditMessage')
                     </div>`
                 } else {
-                    html +=`
-                    <div class="edit_hover mt-2 flex self-center gap-4 ">
-                        <div class="flex gap-2 ">
-                            <div class="w-9 h-9 rounded-full">
-                                @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
+                    html =`
+                        <div class="edit_hover mt-2 flex self-center gap-4 ">
+                            <div class="flex gap-2 ">
+                                <div class="w-9 h-9 rounded-full">
+                                    @include('components.avatar',['avatar_path'=>'images/avatar.jpg'])
                     </div>
                     <p class="text-sm font-semibold bg-gray-200 rounded-lg">
                     <img src="http://chat.th${data.message.content}" width="150" height="150" alt="">
-                             </p>
-                        </div>
-                            @include('components.modalEditMessage')
+                                 </p>
+                            </div>
+                                @include('components.modalEditMessage')
                     </div>`
                 }
             }
@@ -346,11 +351,21 @@
                 $('#input_text').val(null)
             },
             error: function (error) {
-                alert("Có lỗi xảy ra",error);
+                console.log("err: ", error);
             },
         });
     };
+    // Tag Name
+     function tagNameFunction(){
+         let text =  document.getElementById('input_text').value;
+         console.log(text);
+         if(text.includes('@')){
+             console.log('ok')
+             $.ajax({
 
+             });
+         }
+     }
 
 
 </script>
