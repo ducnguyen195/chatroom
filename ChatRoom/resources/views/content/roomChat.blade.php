@@ -81,7 +81,7 @@
                    <div class="flex gap-4">
                        <button type="button" onclick="openModal('modal_search')"> <i class="fa-solid fa-magnifying-glass"></i> </button>
                        <!-- Modal toggle -->
-                       <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
+                       <button data-modal-target="default-modal" data-modal-toggle="default-modal" class="block  dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button">
                            <i class="fa-solid fa-plus"></i>
                        </button>
                    </div>
@@ -267,8 +267,6 @@
                let roomName = response.roomName;
                console.log(roomName.name)
                let room_name = document.getElementById('room_name');
-               {{--let roomId = document.getElementById('room_id')--}}
-               {{--roomId.href = '{{route('room.message', $roomName->id)}}' ;--}}
                room_name.innerText = roomName.name;
                let member = response.member;
                const openMember = document.getElementById('member');

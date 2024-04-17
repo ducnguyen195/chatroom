@@ -28,8 +28,10 @@ Route::group(['prefix'=>'chat-room'],function (){
     Route::get('/message',[MessageController::class,'message'])->name('room.message');
     Route::get('/detail',[MessageController::class,'detail'])->name('room.detail');
     Route::post('/send',[MessageController::class,'send'])->name('message.send');
+    Route::post('/tag_name',[MessageController::class,'tagName'])->name('message.tag_name');
+    Route::post('/image',[MessageController::class,'image'])->name('message.image');
 });
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -91,5 +91,4 @@ class RoomChatController extends Controller
         $member = $member->merge([$owner]);
         return response()->json(['member'=>$member, 'roomName'=> $room],200);
     }
-
 }
